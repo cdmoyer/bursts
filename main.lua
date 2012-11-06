@@ -48,7 +48,7 @@ local tapped = function (ev)
 			xScale = 3,
 			yScale = 3,
 			transition = easing.outExpo,
-			onComplete = function (target) target:removeSelf() end
+			onComplete = function (target) if (target) then target:removeSelf() end end
 		})
 		score = score + 10
 		scoretext:setScore(score)
