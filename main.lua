@@ -5,7 +5,7 @@ WIDTH = display.contentWidth
 HEIGHT = display.contentHeight
 START_DELAY = 2000
 SPEED_INCREASE = 50
-MIN_DELAY = 200
+MIN_DELAY = 400
 ALERT_THRESHOLD = 0.8
 BAR_FONT_SIZE = 16
 BIG_FONT_SIZE = 32
@@ -15,9 +15,11 @@ local rand = math.random
 local dead = false
 
 scorebar = display.newRect(0, 0, WIDTH, BAR_HEIGHT)
+scorebar.alpha = 0.0
 scorebar:setFillColor(0, 0, 120)
 scoretext = display.newText('', 10, BAR_HEIGHT/2, native.systemFontBold, BAR_FONT_SIZE)
 function scoretext:setScore (score)
+	scorebar.alpha = 1.0
 	self.text = 'Score: ' .. score
 	self.y = BAR_HEIGHT / 2
 	self.x = (self.width / 2) + 10
@@ -51,7 +53,10 @@ local tapped = function (ev)
 			xScale = 3,
 			yScale = 3,
 			transition = easing.outExpo,
-			onComplete = function (target) if (target) then target:removeSelf() end end
+			onComplete = function (target) 
+				if (target) then target:removeSelf() end 
+				bubblelimit:setNum(bubbles.numChildren)
+			end
 		})
 		if not dead then score = score + 10 end
 		scoretext:setScore(score)
@@ -196,5 +201,9 @@ end
 
 Runtime:addEventListener('orientation', flipped)
 
-add_walls()
-start()
+img = display.newImage('Default.png')
+img:addEventListener('tap', function (ev) 
+	ev.target:removeSelf()
+	add_walls()
+	start()
+end)
