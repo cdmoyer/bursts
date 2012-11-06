@@ -5,7 +5,7 @@ WIDTH = display.contentWidth
 HEIGHT = display.contentHeight
 START_DELAY = 2000
 SPEED_INCREASE = 50
-MIN_DELAY = 500
+MIN_DELAY = 200
 ALERT_THRESHOLD = 0.8
 BAR_FONT_SIZE = 16
 BIG_FONT_SIZE = 32
@@ -16,15 +16,17 @@ local dead = false
 
 scorebar = display.newRect(0, 0, WIDTH, BAR_HEIGHT)
 scorebar:setFillColor(0, 0, 120)
-scoretext = display.newText('', 10, 0, native.systemFontBold, BAR_FONT_SIZE)
+scoretext = display.newText('', 10, BAR_HEIGHT/2, native.systemFontBold, BAR_FONT_SIZE)
 function scoretext:setScore (score)
 	self.text = 'Score: ' .. score
+	self.y = BAR_HEIGHT / 2
 	self.x = (self.width / 2) + 10
 end
 
-bubblelimit = display.newText('', 10, 0, native.systemFontBold, BAR_FONT_SIZE)
+bubblelimit = display.newText('', 10, BAR_HEIGHT/2, native.systemFontBold, BAR_FONT_SIZE)
 function bubblelimit:setNum (used)
 	local limit = MAX_BUBBLES
+	self.y = BAR_HEIGHT / 2
 	self.text = 'Bubbles: ' .. used .. '/' .. limit
 	self.x = WIDTH - ((self.width / 2) + 10)
 	if (used / limit >= ALERT_THRESHOLD) then self:setTextColor(255,0,0)
@@ -85,7 +87,7 @@ end
 	
 local impulseSpeed = function()
 	local scale = START_DELAY / delay
-	scale = math.min(10, scale * 3)
+	scale = math.min(20, scale * 4)
 	return rand(0, scale), rand(0, scale)
 end
 
