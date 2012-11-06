@@ -12,6 +12,7 @@ BIG_FONT_SIZE = 32
 BAR_HEIGHT = 22
 
 local rand = math.random
+local dead = false
 
 scorebar = display.newRect(0, 0, WIDTH, BAR_HEIGHT)
 scorebar:setFillColor(0, 0, 120)
@@ -50,11 +51,12 @@ local tapped = function (ev)
 			transition = easing.outExpo,
 			onComplete = function (target) if (target) then target:removeSelf() end end
 		})
-		score = score + 10
+		if not dead then score = score + 10 end
 		scoretext:setScore(score)
 	end
 end
 
+local delay = START_DELAY
 local topWall
 local bottomWall
 local leftWall
@@ -81,6 +83,11 @@ local add_walls =  function ()
 	physics.addBody(rightWall, "static", {density = 1.0, friction = 0, bounce = 1, isSensor = false})
 end
 	
+local impulseSpeed = function()
+	local scale = START_DELAY / delay
+	scale = math.min(10, scale * 3)
+	return rand(0, scale), rand(0, scale)
+end
 
 local make_bubble = function ()
 	local basesz = ((WIDTH + HEIGHT) / 2) / 15
@@ -94,14 +101,13 @@ local make_bubble = function ()
 	bubbles:insert(bubble)
 	bubblelimit:setNum(bubbles.numChildren)
 	physics.addBody(bubble, "dynamic", {density=1.0, friction=0.3, bounce=1.0, radius=sz+2, isSensor=false})
-	bubble:applyLinearImpulse(rand(1,10),rand(1,10))
+	bubble:applyLinearImpulse(impulseSpeed())
 end
 
 local overlay = display.newGroup()
 local start
 
 local lose = function()
-	bubblelimit:setNum(0)
 	local cover = display.newRect(0, 0, WIDTH, HEIGHT)
 	cover:setFillColor(200,0,0)
 	cover.alpha = 0.7
@@ -131,10 +137,10 @@ end
 
 
 
-local delay = START_DELAY
 local loop
 loop  = function ()
 	if (bubbles.numChildren >= MAX_BUBBLES) then
+		dead = true
 		lose()
 		return
 	end
@@ -144,6 +150,7 @@ loop  = function ()
 end
 
 start = function (event) 
+	dead = false
 	while bubbles[1] do bubbles[1]:removeSelf() end
 	while overlay[1] do overlay[1]:removeSelf() end
 	delay = START_DELAY
