@@ -24,6 +24,12 @@ local topWall
 local bottomWall
 local leftWall
 local rightWall
+local pops = {
+	audio.loadSound("sounds/pop.wav"),
+	audio.loadSound("sounds/pop2.wav"),
+	audio.loadSound("sounds/pop3.wav"),
+	audio.loadSound("sounds/pop4.wav"),
+}
 
 local start -- declared for later
 
@@ -32,27 +38,27 @@ local levels = function ()
 	local basesz = ((WIDTH + HEIGHT) / 2) / 20
 
 	if so_far < 10 then
-		return 1000, basesz * 3.5, 12 
+		return 1000, basesz * 3.5, 15 
 	elseif so_far < 20 then
-		return 950, basesz * 3.4, 12 
+		return 950, basesz * 3.4, 15 
 	elseif so_far < 30 then
-		return 900, basesz * 3.325, 12 
+		return 900, basesz * 3.325, 16 
 	elseif so_far < 40 then
-		return 850, basesz * 3.25, 14 
+		return 850, basesz * 3.25, 16 
 	elseif so_far < 40 then
-		return 800, basesz * 3.1, 14 
+		return 800, basesz * 3.1, 17 
 	elseif so_far < 50 then
-		return 750, basesz * 3.0, 14 
+		return 750, basesz * 3.0, 17 
 	elseif so_far < 60 then
-		return 700, basesz * 2.8, 16 
+		return 700, basesz * 2.8, 18 
 	elseif so_far < 70 then
-		return 650, basesz * 2.6, 16 
+		return 650, basesz * 2.6, 18 
 	elseif so_far < 80 then
-		return 600, basesz * 2.4, 16 
+		return 600, basesz * 2.4, 19 
 	elseif so_far < 90 then
-		return 550, basesz * 2.2, 18 
+		return 550, basesz * 2.2, 19 
 	elseif so_far < 100 then
-		return 500, basesz * 2.0, 19 
+		return 500, basesz * 2.0, 20 
 	else
 		return 500, basesz * 1.75, 20 
 	end
@@ -90,6 +96,7 @@ local tapped = function (ev)
 	bubblelimit:setNum()
 	ev.target.active = false
 	if ev.target then
+		audio.play(pops[rand(1,table.maxn(pops))])
 		transition.to(ev.target, {
 			alpha = 0,
 			time = 1000,
